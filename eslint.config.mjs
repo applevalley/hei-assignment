@@ -25,6 +25,7 @@ export default [
       "react-hooks": reactHooksPlugin,
       prettier: prettierPlugin,
     },
+    ignorePatterns: ["babel.config.js"],
     rules: {
       ...js.configs.recommended.rules,
       ...reactPlugin.configs.recommended.rules,
@@ -36,6 +37,7 @@ export default [
       "@typescript-eslint/no-unused-vars": "warn",
       "@typescript-eslint/no-explicit-any": "error",
       "react/jsx-filename-extension": [1, { extensions: [".tsx", ".jsx"] }],
+      "react/react-in-jsx-scope": "off",
     },
   },
 ];
