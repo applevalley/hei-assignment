@@ -9,7 +9,10 @@
       "@/constants/*": ["constants/*"],
       "@/hooks/*": ["hooks/*"],
       "@/assets/*": ["assets/*"]
-    }
+    },
+    "jsx": "react-native",
+    "skipLibCheck": true,
+    "moduleResolution": "node"
   },
   "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]
 }
