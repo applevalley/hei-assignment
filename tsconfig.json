@@ -8,7 +8,9 @@
       "@/components/*": ["components/*"],
       "@/constants/*": ["constants/*"],
       "@/hooks/*": ["hooks/*"],
-      "@/assets/*": ["assets/*"]
+      "@/assets/*": ["assets/*"],
+      "@/type/*": ["type/*"],
+      "@/util/*": ["util/*"]
     },
     "jsx": "react-native",
     "skipLibCheck": true,
