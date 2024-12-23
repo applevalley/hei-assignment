@@ -24,6 +24,7 @@ EXPO_PUBLIC_AWS_REGION=""
 
 ## Project Structure
 
+```
 📦assignment
 ┣ 📂.expo
 ┣ 📂.github
@@ -91,6 +92,7 @@ EXPO_PUBLIC_AWS_REGION=""
 ┣ 📜package.json
 ┣ 📜README.md
 ┗ 📜tsconfig.json
+```
 
 ## Features
 
