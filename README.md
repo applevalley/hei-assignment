@@ -1,50 +1,144 @@
-# Welcome to your Expo app 👋
-
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
-
 ## Get started
 
-1. Install dependencies
+1. Create .env and fill data
+
+```
+// concerning security, actual key value are not provided in this readme.
+EXPO_PUBLIC_BUCKET_NAME=""
+EXPO_PUBLIC_AWS_ACCESS_KEY_ID=""
+EXPO_PUBLIC_AWS_SECRET_ACCESS_KEY=""
+EXPO_PUBLIC_AWS_REGION=""
+```
+
+2. Install dependencies
 
    ```bash
    npm install
    ```
 
-2. Start the app
+3. Start the app
 
    ```bash
     npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+## Project Structure
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+📦assignment
+┣ 📂.expo
+┣ 📂.github
+┃ ┗ 📂workflows
+┃ ┃ ┗ 📜ci-assignment.yaml
+┣ 📂app
+┃ ┣ 📂(main)
+┃ ┃ ┗ 📜index.tsx
+┃ ┣ 📜+not-found.tsx
+┃ ┗ 📜_layout.tsx
+┣ 📂assets
+┃ ┣ 📂fonts
+┃ ┃ ┗ 📜SpaceMono-Regular.ttf
+┃ ┗ 📂images
+┃ ┃ ┣ 📜adaptive-icon.png
+┃ ┃ ┣ 📜favicon.png
+┃ ┃ ┣ 📜icon.png
+┃ ┃ ┣ 📜partial-react-logo.png
+┃ ┃ ┣ 📜react-logo.png
+┃ ┃ ┣ 📜react-logo@2x.png
+┃ ┃ ┣ 📜react-logo@3x.png
+┃ ┃ ┗ 📜splash-icon.png
+┣ 📂components
+┃ ┣ 📂atoms
+┃ ┣ 📂molecules
+┃ ┃ ┗ 📜ImageCard.tsx
+┃ ┣ 📂organisms
+┃ ┃ ┣ 📜ImageCardList.tsx
+┃ ┃ ┗ 📜ImageUploadForm.tsx
+┃ ┣ 📂ui
+┃ ┃ ┣ 📜IconSymbol.ios.tsx
+┃ ┃ ┣ 📜IconSymbol.tsx
+┃ ┃ ┣ 📜TabBarBackground.ios.tsx
+┃ ┃ ┗ 📜TabBarBackground.tsx
+┃ ┣ 📂**tests**
+┃ ┃ ┣ 📂**snapshots**
+┃ ┃ ┃ ┗ 📜ThemedText-test.tsx.snap
+┃ ┃ ┗ 📜ThemedText-test.tsx
+┃ ┣ 📜Header.tsx
+┃ ┣ 📜ParallaxScrollView.tsx
+┃ ┣ 📜ThemedText.tsx
+┃ ┗ 📜ThemedView.tsx
+┣ 📂constants
+┃ ┗ 📜Colors.ts
+┣ 📂hooks
+┃ ┣ 📜useColorScheme.ts
+┃ ┣ 📜useColorScheme.web.ts
+┃ ┣ 📜useColumnNumber.ts
+┃ ┗ 📜useThemeColor.ts
+┣ 📂scripts
+┃ ┗ 📜reset-project.js
+┣ 📂type
+┃ ┗ 📜image.d.ts
+┣ 📂util
+┃ ┣ 📜dateFormat.ts
+┃ ┗ 📜fileSize.ts
+┣ 📜.env
+┣ 📜.eslintrc.js
+┣ 📜.gitignore
+┣ 📜.prettierrc.json
+┣ 📜app.json
+┣ 📜babel.config.js
+┣ 📜expo-env.d.ts
+┣ 📜package-lock.json
+┣ 📜package.json
+┣ 📜README.md
+┗ 📜tsconfig.json
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## Features
 
-## Get a fresh project
+### Fetch images
 
-When you're ready, run:
+i separated feature with three steps, molecules-organisms-page.
+when user entered main page, after component((main)/index.tsx) rendered, useEffect hook will run function: fetchImages.
+after that, page component send Images state to organisms, ImageCardList.tsx as props.
 
-```bash
-npm run reset-project
+in ImageCardList.tsx, in FlatList component, it send single Image to its child, ImageCard.tsx.
+to implement responsible design, i made some custom hook, useColumnNumber. it returns number for each row, if width value for viewport shrink, it return lower number value.
+
+in ImageCard.tsx component, it describe image, and its detail info - name, size, and updated date.
+to format some data like size and date, i made util functions, dateFormat.ts and fileSize.ts.
+in fileSize.ts, it takes numeric filesize from image as parameter. and, calculate detail file size with unit, "Bytes", "KB", "MB", "GB", "TB".
+in dateFormat.ts, it takes Date data as parameter. and, it returns formatted date, as "YYYY-MM-DD" format.
+
+```
+// dateFormat.ts
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
+export const dateFormat = (originalDate: Date) => {
+  const date = new Date(originalDate);
+  const formattedDate = dayjs(date).tz("Asia/Seoul").format("YYYY-MM-DD");
+
+  return formattedDate;
+};
+
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+```
+// fileSize.ts
+export const fileSize = (size: number) => {
+  if (size === 0) return "0 Byte";
+  const k = 1024;
+  const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
+  const i = Math.floor(Math.log(size) / Math.log(k));
+  return parseFloat((size / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+};
 
-## Learn more
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+### Upload images
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+in main page component((main)/index.tsx), it has ImageUploadForm.tsx component as child.
+it has button element, and user clicked it, it import image uploader. user can upload multiple image, and it runs fetchImages function as successCallback.
