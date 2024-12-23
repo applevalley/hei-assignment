@@ -11,13 +11,14 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 2020,
     sourceType: "module",
-    project: "./tsconfig.json",
+    project: ["./tsconfig.json"],
     ecmaFeatures: {
       jsx: true,
     },
+    tsconfigRootDir: __dirname,
   },
   plugins: ["@typescript-eslint", "react", "react-hooks", "prettier"],
-  ignorePatterns: ["babel.config.js", "/dist/*"],
+  ignorePatterns: ["babel.config.js", "/dist/*", ".eslintrc.js", "scripts/**/*"],
   settings: {
     react: {
       version: "detect",
